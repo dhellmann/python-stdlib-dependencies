@@ -98,6 +98,8 @@ def get_dot_graph(scanner, module_name):
 
     # All of the modules in the scanner as nodes
     for used_module in scanner.module_names:
+        if used_module == '__main__':
+            continue
         yield '  "{}" [ shape=oval ]'.format(used_module)
 
     yield ''
@@ -108,6 +110,8 @@ def get_dot_graph(scanner, module_name):
     for start, end in scanner.get_edges(module_name):
         uniq_edge = (start, end)
         if uniq_edge in known_edges:
+            continue
+        if '__main__' in uniq_edge:
             continue
         known_edges.add(uniq_edge)
         yield '  "{}" -> "{}"'.format(start, end)
