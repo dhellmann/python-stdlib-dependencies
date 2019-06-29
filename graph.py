@@ -50,6 +50,10 @@ class Scanner:
         for import_node in self._get_imports(mod.__file__):
             self._imports[mod.__name__].append(import_node)
             submod_name = self._get_module_name_from_import(import_node)
+            if submod_name == 'doctest':
+                # heapq imports doctest in __main__, but we can ignore
+                # that.
+                continue
             if submod_name in sys.modules:
                 submod = sys.modules[submod_name]
             else:
