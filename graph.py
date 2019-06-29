@@ -101,7 +101,7 @@ class Scanner:
             yield from self.get_edges(target_module, shown)
 
 
-def get_dot_graph(scanner, module_name):
+def get_dot_graph(scanner, module_name, track_seen=False):
     yield 'digraph stdlib {'
 
     # All of the modules in the scanner as nodes
@@ -113,6 +113,7 @@ def get_dot_graph(scanner, module_name):
     yield ''
 
     known_edges = set()
+    seen_nodes = set()
 
     # Edges for imports from this module
     for start, end in scanner.get_edges(module_name):
@@ -121,6 +122,10 @@ def get_dot_graph(scanner, module_name):
             continue
         if '__main__' in uniq_edge:
             continue
+        if end in seen_nodes:
+            continue
+        if track_seen:
+            seen_nodes.add(end)
         known_edges.add(uniq_edge)
         yield '  "{}" -> "{}"'.format(start, end)
 
@@ -129,8 +134,15 @@ def get_dot_graph(scanner, module_name):
 
 
 if __name__ == '__main__':
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--simplified', '-s', action='store_true')
+    parser.add_argument('module', default='ensurepip')
+    args = parser.parse_args()
+
     import ensurepip
     scanner = Scanner()
     scanner.scan_module(ensurepip)
-    for line in get_dot_graph(scanner, 'ensurepip'):
+    for line in get_dot_graph(scanner, args.module, args.simplified):
         print(line)
