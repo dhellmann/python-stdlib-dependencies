@@ -1,3 +1,9 @@
+# dot files produced by graph.py
+*.dot
+
+# image files produced by graphviz
+*.png
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
