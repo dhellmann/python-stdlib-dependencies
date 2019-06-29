@@ -86,10 +86,14 @@ class Scanner:
             return
         shown.add(name)
 
+        # Edges directly from this node
         for imported in self._imports[name]:
-            imported_name = self._get_module_name_from_import(imported)
             target_module = self._get_module_name_from_import(imported)
             yield (name, target_module)
+
+        # Recurse
+        for imported in self._imports[name]:
+            target_module = self._get_module_name_from_import(imported)
             yield from self.get_edges(target_module, shown)
 
 
