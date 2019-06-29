@@ -117,8 +117,8 @@ def get_dot_graph(scanner, module_name):
 
 
 if __name__ == '__main__':
-    import urllib.request
+    import ensurepip
     scanner = Scanner()
-    scanner.scan_module(urllib.request)
-    for line in get_dot_graph(scanner, 'urllib.request'):
+    scanner.scan_module(ensurepip)
+    for line in get_dot_graph(scanner, 'ensurepip'):
         print(line)
